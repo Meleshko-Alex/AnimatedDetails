@@ -9,7 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.meleha.animateddetails.ui.components.DetailsScreen
+import com.meleha.animateddetails.ui.components.DetailScreen.DetailsScreen
 import com.meleha.animateddetails.ui.theme.AnimatedDetailsTheme
 
 class MainActivity : ComponentActivity() {

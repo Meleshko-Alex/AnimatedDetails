@@ -1,4 +1,4 @@
-package com.meleha.animateddetails.ui.components
+package com.meleha.animateddetails.ui.components.DetailScreen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

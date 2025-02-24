@@ -1,4 +1,4 @@
-package com.meleha.animateddetails.ui.components
+package com.meleha.animateddetails.ui.components.DetailScreen
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
