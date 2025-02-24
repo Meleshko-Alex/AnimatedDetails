@@ -1,0 +1,44 @@
+{
+  ConstraintSets: {
+    start: {
+      player_btns: {
+        start: ['parent', 'start'],
+        end: ['parent', 'end'],
+        bottom: ['parent', 'bottom']
+      },
+      header: {
+        start: ['parent', 'start'],
+        end: ['parent', 'end'],
+        top: ['player_btns', 'top'],
+      },
+      box: {
+        width: 'spread',
+        height: 'spread',
+        start: ['parent', 'start'],
+        end: ['parent', 'end'],
+        top: ['player_btns', 'bottom'],
+        bottom: ['parent', 'bottom'],
+      }
+    },
+    end: {
+      player_btns: {
+        start: ['parent', 'start'],
+        end: ['parent', 'end'],
+        bottom: ['parent', 'bottom', 40]
+      },
+      header: {
+        start: ['parent', 'start'],
+        end: ['parent', 'end'],
+        bottom: ['player_btns', 'top'],
+      },
+      box: {
+        width: 'spread',
+        height: 'spread',
+        start: ['parent', 'start'],
+        end: ['parent', 'end'],
+        top: ['player_btns', 'bottom'],
+        bottom: ['parent', 'bottom'],
+      }
+    }
+  }
+}
