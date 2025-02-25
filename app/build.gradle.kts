@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.runtime.compose)
 
     // Hilt
     implementation(libs.hilt.android)
@@ -61,6 +62,9 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.moshi.converter)
     implementation(libs.moshi)
+
+    //Coil
+    implementation(libs.coil)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

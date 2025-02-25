@@ -12,6 +12,8 @@ constraintLayout = "1.1.0"
 hiltVersion = "2.51.1"
 retrofitVer = "2.9.0"
 moshiVer = "1.15.0"
+runtimeCompose = "2.8.7"
+coilVer = "2.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,6 +36,9 @@ hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler" , 
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit" , version.ref = "retrofitVer"}
 moshi-converter = { group = "com.squareup.retrofit2", name = "converter-moshi" , version.ref = "retrofitVer"}
 moshi = { group = "com.squareup.moshi", name = "moshi-kotlin" , version.ref = "moshiVer"}
+runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose" , version.ref = "runtimeCompose"}
+coil = { group = "io.coil-kt", name = "coil-compose" , version.ref = "coilVer"}
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
