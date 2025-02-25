@@ -1,6 +1,10 @@
 package com.meleha.animateddetails.ui.components.detail
 
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -25,16 +29,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.MotionScene
 import com.meleha.animateddetails.R
+import com.meleha.animateddetails.domain.models.FlickrItem
 
-@OptIn(ExperimentalMotionApi::class)
+@OptIn(ExperimentalMotionApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun DetailsScreen(modifier: Modifier = Modifier) {
+fun DetailsScreen(
+    modifier: Modifier,
+    item: FlickrItem,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
+    val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     var isVisible by remember { mutableStateOf(false) }
     var progress by remember { mutableFloatStateOf(0f) }
     val context = LocalContext.current
@@ -44,98 +55,97 @@ fun DetailsScreen(modifier: Modifier = Modifier) {
             .decodeToString()
     }
 
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-        ImageAndTextScroll(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Black.copy(alpha = (progress * 0.5f).coerceIn(0f, 0.5f)))
-                .weight(1f)
-        )
-
-        AnimatedVisibility(
-            visible = isVisible,
-            enter = slideInVertically(
-                initialOffsetY = { fullHeight -> fullHeight },
-                animationSpec = tween(durationMillis = 500, easing = LinearOutSlowInEasing)
-            ),
-            exit = slideOutVertically(
-                targetOffsetY = { fullHeight -> fullHeight },
-                animationSpec = tween(durationMillis = 300, easing = FastOutLinearInEasing)
-            )
+    with(sharedTransitionScope) {
+        Column(
+            modifier = modifier.fillMaxSize()
         ) {
-            Column(
-                modifier = modifier
-                    //.background(Color.White)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
+            ImageAndTextScroll(
+                item = item,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Black.copy(alpha = (progress * 0.5f).coerceIn(0f, 0.5f)))
+                    .weight(1f)
+                    .sharedElement(
+                        state = rememberSharedContentState(key = item.published),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                    )
+            )
 
-                MotionLayout(
-                    modifier = modifier
-                        .background(Color.LightGray)
-                        .pointerInput(Unit) {
-                            detectVerticalDragGestures { _, dragAmount ->
-                                progress = (progress - dragAmount / 1000f).coerceIn(0f, 1f)
-                            }
-                        },
-                    motionScene = MotionScene(content = motionScene),
-                    progress = progress
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = slideInVertically(
+                    initialOffsetY = { fullHeight -> fullHeight },
+                    animationSpec = tween(durationMillis = 500, easing = LinearOutSlowInEasing)
+                ),
+                exit = slideOutVertically(
+                    targetOffsetY = { fullHeight -> fullHeight },
+                    animationSpec = tween(durationMillis = 300, easing = FastOutLinearInEasing)
+                )
+            ) {
+                Column(
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
                 ) {
-                    FullPlayerHeader(
-                        modifier
-                            .layoutId("header"),
-                        onCloseClick = {
-                            progress = 0f
-                            isVisible = false
-                        },
-                        title = "Title",
-                        description = "Some Description".repeat(20)
-                    )
-                    AudioPlayerButtons(
+
+                    MotionLayout(
                         modifier = modifier
-                            .layoutId("player_btns")
                             .background(Color.LightGray)
-                    )
-                    Box(
+                            .pointerInput(Unit) {
+                                detectVerticalDragGestures { _, dragAmount ->
+                                    progress = (progress - dragAmount / 1000f).coerceIn(0f, 1f)
+                                }
+                            },
+                        motionScene = MotionScene(content = motionScene),
+                        progress = progress
+                    ) {
+                        FullPlayerHeader(
+                            modifier
+                                .layoutId("header"),
+                            onCloseClick = {
+                                progress = 0f
+                                isVisible = false
+                            },
+                            title = stringResource(R.string.an_audio_title),
+                            description = stringResource(R.string.an_audio_title)
+                        )
+                        AudioPlayerButtons(
+                            modifier = modifier
+                                .layoutId("player_btns")
+                                .background(Color.LightGray)
+                        )
+                        Box(
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .background(Color.LightGray)
+                                .layoutId("box")
+                        )
+                    }
+
+                    CustomProgressBar(
                         modifier = modifier
-                            .fillMaxWidth()
                             .background(Color.LightGray)
-                            .layoutId("box")
+                            .fillMaxWidth(),
+                        heightInDp = 5.dp,
+                        heightMultiplier = 2,
+                        leftColor = Color.Black,
+                        rightColor = Color.DarkGray,
+                        onDragEnd = {},
+                        onDrag = {}
                     )
                 }
-
-                CustomProgressBar(
-                    modifier = modifier
-                        .background(Color.LightGray)
-                        .fillMaxWidth(),
-                    heightInDp = 5.dp,
-                    heightMultiplier = 2,
-                    leftColor = Color.Black,
-                    rightColor = Color.DarkGray,
-                    onDragEnd = {},
-                    onDrag = {}
-                )
             }
+
+            TwoClickableText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Gray),
+                onAudioClick = {
+                    progress = 0f
+                    isVisible = !isVisible
+                },
+                onHomeClick = { backDispatcher?.onBackPressed() }
+            )
         }
-
-        TwoClickableText(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Gray),
-            onAudioClick = {
-                progress = 0f
-                isVisible = !isVisible
-            },
-            onHomeClick = {}
-        )
     }
-}
-
-@Composable
-@Preview(showSystemUi = true)
-private fun DetailScreenPreview() {
-    DetailsScreen()
 }

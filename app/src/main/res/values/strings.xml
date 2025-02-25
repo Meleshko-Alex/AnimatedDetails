@@ -2,4 +2,6 @@
     <string name="app_name">AnimatedDetails</string>
     <string name="home">Home</string>
     <string name="audio">Audio</string>
+    <string name="an_audio_title">An audio title</string>
+    <string name="description">Immerse yourself in a soothing blend of ambient sounds and soft melodies. This audio track is perfect for relaxation, meditation, or deep focus. Let the calming atmosphere transport you to a peaceful state of mind.</string>
 </resources>

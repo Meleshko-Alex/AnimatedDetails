@@ -1,5 +1,9 @@
 package com.meleha.animateddetails.ui.components.home
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -16,23 +20,38 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.meleha.animateddetails.domain.models.FlickrItem
 import coil.compose.AsyncImage
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel) {
+fun HomeScreen(
+    modifier: Modifier,
+    viewModel: HomeViewModel,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    onItemClicked: (FlickrItem) -> Unit
+) {
     val flickrItems by viewModel.items.collectAsStateWithLifecycle()
 
-    LazyColumn(modifier = Modifier
-        .fillMaxSize()
-        .padding(6.dp)) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(6.dp)
+    ) {
         flickrItems.forEach { (category, list) ->
             item {
                 Text(
-                    modifier = Modifier.padding(start = 6.dp),
-                    text = category.uppercase(), style = MaterialTheme.typography.titleLarge)
+                    modifier = modifier.padding(start = 6.dp),
+                    text = category.uppercase(), style = MaterialTheme.typography.titleLarge
+                )
             }
             item {
-                LazyRow(modifier = Modifier.padding(vertical = 8.dp)) {
+                LazyRow(modifier = modifier.padding(vertical = 8.dp)) {
                     items(list.size) { index ->
-                        PhotoItem(list[index])
+                        PhotoItem(
+                            list[index],
+                            sharedTransitionScope = sharedTransitionScope,
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            onItemClicked
+                        )
                     }
                 }
             }
@@ -40,29 +59,45 @@ fun HomeScreen(viewModel: HomeViewModel) {
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun PhotoItem(item: FlickrItem) {
+fun PhotoItem(
+    item: FlickrItem,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    onItemClicked: (FlickrItem) -> Unit
+) {
     val placeHolder = rememberVectorPainter(image = Icons.Outlined.Clear)
-    Column(
-        modifier = Modifier
-            .padding(8.dp)
-            .width(120.dp),
 
-    ) {
-        AsyncImage(
-            model = item.media.m,
-            contentDescription = null,
-            placeholder = placeHolder,
-            contentScale = ContentScale.Crop,
+    with(sharedTransitionScope) {
+        Column(
             modifier = Modifier
-                .size(120.dp)
-                .aspectRatio(1f / 1f)
-        )
-        Text(
-            text = item.title,
-            textAlign = TextAlign.Start,
-            maxLines = 1,
-            modifier = Modifier.fillMaxWidth()
-        )
+                .padding(8.dp)
+                .width(120.dp)
+                .clickable { onItemClicked(item) },
+
+            ) {
+            AsyncImage(
+                model = item.media.m,
+                contentDescription = null,
+                placeholder = placeHolder,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(120.dp)
+                    .aspectRatio(1f / 1f)
+                    .sharedElement(
+                        state = rememberSharedContentState(
+                            key = item.published
+                        ),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                    ),
+            )
+            Text(
+                text = item.title,
+                textAlign = TextAlign.Start,
+                maxLines = 1,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
 }
