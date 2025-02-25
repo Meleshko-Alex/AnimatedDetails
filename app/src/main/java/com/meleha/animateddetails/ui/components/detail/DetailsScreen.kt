@@ -107,7 +107,7 @@ fun DetailsScreen(
                                 isVisible = false
                             },
                             title = stringResource(R.string.an_audio_title),
-                            description = stringResource(R.string.an_audio_title)
+                            description = stringResource(R.string.description)
                         )
                         AudioPlayerButtons(
                             modifier = modifier
