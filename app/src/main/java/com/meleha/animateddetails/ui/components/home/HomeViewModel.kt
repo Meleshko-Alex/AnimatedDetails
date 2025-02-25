@@ -1,4 +1,4 @@
-package com.meleha.animateddetails.ui.components.HomeScreen
+package com.meleha.animateddetails.ui.components.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

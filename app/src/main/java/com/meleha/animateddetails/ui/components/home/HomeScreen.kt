@@ -1,4 +1,4 @@
-package com.meleha.animateddetails.ui.components.HomeScreen
+package com.meleha.animateddetails.ui.components.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn

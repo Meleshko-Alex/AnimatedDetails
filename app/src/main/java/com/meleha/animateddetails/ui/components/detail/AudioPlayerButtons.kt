@@ -1,4 +1,4 @@
-package com.meleha.animateddetails.ui.components.DetailScreen
+package com.meleha.animateddetails.ui.components.detail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

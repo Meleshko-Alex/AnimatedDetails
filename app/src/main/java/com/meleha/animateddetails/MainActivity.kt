@@ -9,9 +9,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.meleha.animateddetails.ui.components.DetailScreen.DetailsScreen
-import com.meleha.animateddetails.ui.components.HomeScreen.HomeScreen
-import com.meleha.animateddetails.ui.components.HomeScreen.HomeViewModel
+import com.meleha.animateddetails.ui.components.detail.DetailsScreen
+import com.meleha.animateddetails.ui.components.home.HomeScreen
+import com.meleha.animateddetails.ui.components.home.HomeViewModel
 import com.meleha.animateddetails.ui.theme.AnimatedDetailsTheme
 import dagger.hilt.android.AndroidEntryPoint
 
